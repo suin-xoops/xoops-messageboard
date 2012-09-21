@@ -57,7 +57,7 @@ chmod 777 xoops_trust_path/uploads/messageboard/attachment
 	 * @param null $board 生成されたBoardオブジェクトが格納される
 	 * @throws \RuntimeException
 	 */
-	"MessageBoard.CreateBoard" ($clientKey, &$boar = null)
+	"MessageBoard.CreateBoard" ($clientKey, &$board = null)
 ```
 
 こんな風に呼びだす:
