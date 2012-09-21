@@ -1,0 +1,78 @@
+<{**
+  * @param $board \MessageBoard\Model\Board
+  *}>
+<{strip}>
+<div class="messageboard">
+	<a name="messageboardListHead"></a>
+	<div class="messageboardComments">
+		<{foreach item="comment" from=$board->getComments()}>
+			<div class="messageboardComment">
+				<div class="messageboardCommentHead">
+					<a href="<{$xoops_url}>/userinfo.php?uid=<{$comment->get('user_id')}>">
+						<i class="icon-user"></i>
+						<{$comment->get('user_id')|xoops_user:"user_name"}>
+					</a>
+					&nbsp;posted on <{$comment->get('created')|xoops_formattimestamp:"m"}>
+				</div>
+				<div class="messageboardCommentBody">
+					<p><{$comment->get('body')|escape|nl2br}></p>
+				</div>
+				<ul class="messageboardCommentAttachments">
+					<{foreach item="attachment" from=$comment->getAttachments()}>
+						<li>
+							<a href="<{$xoops_url}>/modules/messageboard/attachment.php/<{$attachment->get('id')}>/<{$attachment->get('name')|rawurlencode}>">
+								<i class="icon-file"></i><{$attachment->get('name')|escape}>
+							</a>
+						</li>
+					<{/foreach}>
+				</ul>
+			</div>
+		<{/foreach}>
+	</div>
+
+	<form action="<{$xoops_url}>/modules/messageboard/index.php" method="post" enctype="multipart/form-data" class="messageboardForm">
+		<a name="messageboardAddComment"></a>
+		<input type="hidden" name="client_key" value="<{$board->get('client_key')|escape}>">
+		<input type="hidden" name="return_url" value="<{$returnUrl|escape}>">
+		<{if $previousPost.errorMessages}>
+			<div class="errorMsg alert alert-error">
+				<ul>
+					<{foreach item="errorMessage" from=$previousPost.errorMessages}>
+						<li><{$errorMessage|escape}></li>
+					<{/foreach}>
+				</ul>
+			</div>
+		<{/if}>
+		<div class="control-group messageboardFormBody">
+			<div class="controls">
+				<textarea name="body" id="messageboardCommentBody" rows="5" cols="100"><{$previousPost.body|escape}></textarea>
+			</div>
+		</div>
+		<div class="control-group messageboardFormAttachments">
+			<div>添付ファイル:</div>
+			<div class="controls" data-messageboard-attachment-template="true">
+				<input type="file" name="attachments[]">
+			</div>
+			<a href="#" data-messageboard-add-attachment-button="true"><i class="icon-plus-sign"></i>添付ファイルを追加する</a>
+		</div>
+		<div class="control-group messageboardFormFoot">
+			<div class="controls">
+				<button type="submit" class="btn">メッセージ送信</button>
+			</div>
+		</div>
+	</form>
+</div>
+<script type="text/javascript">
+(function(){
+	jQuery(function(){
+		var attachmentTemplate = $('[data-messageboard-attachment-template]').clone();
+
+		$('[data-messageboard-add-attachment-button]').click(function(){
+			var newAttachmentInput = attachmentTemplate.clone();
+			$('[data-messageboard-attachment-template]:last').after(newAttachmentInput);
+			return false;
+		});
+	});
+}());
+</script>
+<{/strip}>
